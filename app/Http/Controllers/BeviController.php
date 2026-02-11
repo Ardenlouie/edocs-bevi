@@ -11,6 +11,7 @@ use App\Models\Department;
 use App\Models\Type;
 use App\Helpers\FileSavingHelper;
 use Carbon\Carbon;
+use Auth;
 
 class BeviController extends Controller
 {
@@ -89,8 +90,10 @@ class BeviController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BeviAddRequest $request)
     {
+        $user_id = Auth::user()->id;
+
         $last_edoc = Edoc::withTrashed()->where('type_id', $request->type_id)->where('department_id', $request->department_id)
         ->where('company_id', $request->company_id)->orderBy('control_number', 'DESC')
                 ->first();  
@@ -111,6 +114,7 @@ class BeviController extends Controller
             'department_id' => $request->department_id,
             'employee_id' => $request->employee_id,
             'department_id' => $request->department_id,
+            'user_id' => $user_id,
             'revision_number' => $request->revision_number,
             'file_name' => $request->file_name,
             'date_effectivity' => $request->date_effectivity,
@@ -188,9 +192,27 @@ class BeviController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Bevi $bevi)
+    public function update(Request $request, $id)
     {
+        $edoc = Edoc::findOrFail(decrypt($id));
+
+        $edoc->update([
+            'company_id' => $request->company_id,
+            'date_effectivity' => $request->date_effectivity,
+            'remarks' => $request->remarks,
+            'title' => $request->title,
+            'status' => $request->status,
+        ]);
         
+
+        // logs
+        activity('updated')
+            ->performedOn($edoc)
+            ->log(':causer.name has updated edoc :subject.name');
+
+        return back()->with([
+            'message_success' => 'Edocs '.$edoc->control_number.' has been successfully updated.'
+        ]);
     }
 
     /**

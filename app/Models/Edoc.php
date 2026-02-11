@@ -23,6 +23,7 @@ class Edoc extends Model
         'type_id',
         'company_id',
         'department_id',
+        'user_id',
         'revision_number',
         'file_name',
         'path',
@@ -42,5 +43,9 @@ class Edoc extends Model
 
     public function department() {
         return $this->belongsTo('App\Models\Department');
+    }
+
+    public function user() {
+        return $this->belongsTo('App\Models\User');
     }
 }

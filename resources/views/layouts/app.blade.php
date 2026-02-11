@@ -90,14 +90,13 @@
 
 @section('footer')
     <div class="float-right text-dark">
-        Version: {{ config('app.version', '1.0.0') }}
+        Version: {{ config('app.version', '1.0') }} <br>
     </div>
 
-    <strong>
-        <a href="{{ config('app.company_url', '#') }}"  class="text-dark">
-            {{ config('app.company_name', 'My company') }}
-        </a>
-    </strong>
+        <strong>Copyright &copy; 2026 
+            <a href="https://www.bevi.com.ph/" target="_blank">BEVI Beauty Elements Ventures Inc.</a>
+        </strong>
+
 @stop
 
 {{-- Setup Custom Preloader Content --}}

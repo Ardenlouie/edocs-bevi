@@ -7,7 +7,9 @@
 
 {{-- Content body: main page content --}}
 @section('content_body')
-    {{ html()->form('POST', route('bevi.update', encrypt($edoc->id)))->open() }}
+   <form action="{{ route('bevi.update', encrypt($edoc->id)) }}" method="POST" id="update_edoc">
+    @csrf                           
+
         <div class="card">
             <div class="card-header py-2">
                 <div class="row">
@@ -96,8 +98,6 @@
                             </select>
                         </div>
                     </div>
-
-
         
 
 
@@ -109,7 +109,7 @@
                 {{ html()->submit('<i class="fa fa-save"></i> '.__('Save Edoc'))->class(['btn', 'btn-primary', 'btn-sm']) }}
             </div>
         </div>
-    {{ html()->form()->close() }}
+    </form>
 @stop
 
 {{-- Push extra CSS --}}

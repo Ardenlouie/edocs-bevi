@@ -31,6 +31,7 @@ class HomeController extends Controller
         $policy = Edoc::where('type_id', 4)->count();
         $work_instructions = Edoc::where('type_id', 5)->count();
         $others = Edoc::where('type_id', 6)->count();
+        $active_edocs = Edoc::orderBy('created_at', 'desc')->get()->take(10);
 
         return view('home')->with([
             'forms' => $forms,
@@ -39,6 +40,7 @@ class HomeController extends Controller
             'policy' => $policy,
             'work_instructions' => $work_instructions,
             'others' => $others,
+            'active_edocs' => $active_edocs,
             
         ]);
     }
