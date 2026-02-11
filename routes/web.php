@@ -123,7 +123,7 @@ Route::group(['middleware' => ['auth', 'optimizeImages']], function() {
         Route::get('ecom', [BeviController::class, 'ecom'])->name('bevi.ecom');
         Route::get('bevi/edit/{id}', [BeviController::class, 'edit'])->name('bevi.edit');
         Route::post('bevi/store', [BeviController::class, 'store'])->name('bevi.store');
-        Route::post('bevi/update', [BeviController::class, 'update'])->name('bevi.update');
+        Route::post('bevi/update/{id}', [BeviController::class, 'update'])->name('bevi.update');
 
     });
 

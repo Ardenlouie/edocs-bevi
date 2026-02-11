@@ -7,16 +7,17 @@
         <div class="modal-body">
             <div class="row">
         
-                <div class="col-6">
+                <div class="col-4">
                     <div class="form-group">
-                        <h3> {{$edocs->control_number}}</h3>
+                        <h3> {{($edocs->control_number ?? '')}}</h3>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                     <div class="form-group">
-                        <h3> {{$edocs->reference_number}}</h3>
+                        <h3> {{($edocs->title ?? '')}}</h3>
                     </div>
                 </div>
+                
 
 
                 <iframe
@@ -25,6 +26,13 @@
                     height="600px"
                     style="border: none;">
                 </iframe>
+
+                <div class="col-12">
+                    <div class="form-group float-right">
+                        <h3>Created By:</h3>
+                        <h3>{{($edocs->user->name ?? '')}}</h3>
+                    </div>
+                </div>
 
   
             </div>

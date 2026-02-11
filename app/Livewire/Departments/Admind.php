@@ -13,7 +13,7 @@ class Admind extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
-    public $search, $item_per_page, $company_id=1, $department_id=2, $departments, $types, $type_id=1;
+    public $search, $item_per_page, $company_id=1, $department_id=2, $departments, $types, $type_id=1, $status='active';
     public $page_selected;
     
     public $activeTab = 'tab1';
@@ -27,6 +27,10 @@ class Admind extends Component
     }
 
     public function updatedItemPerPage() {
+        $this->resetPage('edocs-page');
+    }
+
+    public function updatedStatus() {
         $this->resetPage('edocs-page');
     }
 
@@ -66,6 +70,9 @@ class Admind extends Component
                         ->orWhere('reference_number', 'like', '%'.$this->search.'%')
                         ->orWhere('type_id', 'like', '%'.$this->search.'%');
                     });
+                }
+                if(!empty($this->status)) {
+                    $query->where('status', $this->status);
                 }
 
             });

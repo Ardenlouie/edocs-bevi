@@ -410,13 +410,13 @@ return [
                     'can'       => 'company access',
                     'active'    => ['companies', 'company*']
                 ],
-                [
-                    'text'      => 'Types',
-                    'url'       => 'types',
-                    'icon'      => 'fas fa-fw fa-file-alt',
-                    'can'       => 'company access',
-                    'active'    => ['types', 'type*']
-                ],
+                // [
+                //     'text'      => 'Types',
+                //     'url'       => 'types',
+                //     'icon'      => 'fas fa-fw fa-file-alt',
+                //     'can'       => 'company access',
+                //     'active'    => ['types', 'type*']
+                // ],
                 [
                     'text'      => 'users',
                     'url'       => 'users',

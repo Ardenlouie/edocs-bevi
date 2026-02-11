@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 
 class BeviAddRequest extends FormRequest
 {
@@ -11,7 +14,7 @@ class BeviAddRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('user access');
+        return auth()->user()->can('edoc access');
 
     }
 
@@ -31,5 +34,12 @@ class BeviAddRequest extends FormRequest
             ],
             
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        session()->flash('message_error', 'Error Uploading Edoc. File is required and must be a PDF file.');
+
+        parent::failedValidation($validator);
     }
 }

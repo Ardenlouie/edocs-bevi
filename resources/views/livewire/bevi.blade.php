@@ -6,7 +6,10 @@
                     <ul class="nav nav-tabs ">
                         @foreach($types as $key => $type)
                         <li class="nav-item text-center">
-                            <a class="btn nav-link {{ $activeTab === 'tab'.$key ? 'active' : '' }}" wire:click="changeTab('tab{{$key}}','{{$key}}')"><b>{{$type->description}}</b></a>
+                            <a class="btn nav-link {{ $activeTab === 'tab'.$key ? 'active bg-purple text-white' : 'btn-outline-secondary' }}" 
+                                wire:click="changeTab('tab{{$key}}','{{$key}}')">
+                                <b>{{$type->description}}</b>
+                            </a>
                         </li>
                         @endforeach
 
@@ -32,6 +35,14 @@
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="form-group">
                                 <input type="text" placeholder="Search" class="form-control form-control-md" wire:model.live ="search">
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <select name="" class="form-control form-control-md text-uppercase" wire:model.lazy="status">
+                                        <option value="active">ACTIVE</option>
+                                        <option value="revised">REVISED</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-lg-1 col-md-6 col-sm-12">
@@ -92,6 +103,8 @@
                                             <span class="badge badge-danger">PENDING</span>
                                         @elseif($edoc->status == 'active')
                                             <span class="badge badge-success">ACTIVE</span>
+                                        @elseif($edoc->status == 'revised')
+                                            <span class="badge badge-danger">REVISED</span>
                                         @else
                                         @endif
                                     </b><br>
