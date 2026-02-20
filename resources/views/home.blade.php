@@ -86,7 +86,7 @@
                             <th>Company</th>
                             <th>Control No.</th>
                             <th>Title</th>
-                            <th>Document Type</th>
+                            <th>Revision No.</th>
                             <th>Department</th>
                             <th>Uploaded By</th>
                             <th>Upload Date</th>
@@ -100,7 +100,7 @@
                             <td>{{($edoc->company->name ?? '')}}</td>
                             <td>{{($edoc->control_number ?? '')}}</td>
                             <td>{{($edoc->title ?? '')}}</td>
-                            <td>{{($edoc->type->description ?? '')}}</td>
+                            <td><span class="badge bg-purple">{{($edoc->revision_number ?? '')}}</span></td>
                             <td>{{$edoc->department->name}}</td>
                             <td>{{($edoc->user->name ?? '')}}</td>
                             <td>{{\Carbon\Carbon::parse($edoc->created_at)->format('M d, Y')}}</td>
@@ -109,8 +109,8 @@
                                     <span class="badge badge-danger">PENDING</span>
                                 @elseif($edoc->status == 'active')
                                     <span class="badge badge-success">ACTIVE</span>
-                                @elseif($edoc->status == 'revised')
-                                    <span class="badge badge-danger">REVISED</span>
+                                @elseif($edoc->status == 'inactive')
+                                    <span class="badge badge-danger">INACTIVE</span>
                                 @else
                                 @endif
                             </td>

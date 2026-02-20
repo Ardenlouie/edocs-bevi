@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bevi;
 use Illuminate\Http\Request;
 use App\Http\Requests\BeviAddRequest;
+use App\Http\Requests\EdocUpdateRequest;
 use App\Models\Edoc;
 use App\Models\Company;
 use App\Models\Department;
@@ -94,18 +95,6 @@ class BeviController extends Controller
     {
         $user_id = Auth::user()->id;
 
-        $last_edoc = Edoc::withTrashed()->where('type_id', $request->type_id)->where('department_id', $request->department_id)
-        ->where('company_id', $request->company_id)->orderBy('control_number', 'DESC')
-                ->first();  
-        if(!empty($last_edoc)) {
-
-            $last_edoc->update([
-                'status' => 'revised',
-            ]);
-            
-
-        }
-
         $edocs = new Edoc([
             'control_number' => $request->control_number,
             'reference_number' => $request->reference_number,
@@ -116,7 +105,6 @@ class BeviController extends Controller
             'department_id' => $request->department_id,
             'user_id' => $user_id,
             'revision_number' => $request->revision_number,
-            'file_name' => $request->file_name,
             'date_effectivity' => $request->date_effectivity,
             'remarks' => $request->remarks,
             'title' => $request->title,
@@ -126,15 +114,17 @@ class BeviController extends Controller
 
         if(!empty($request->file_name)) {
             $request->validate([
-            'file_name' => 'required|mimes:pdf|max:10240',
+                'file_name' => 'required|mimes:pdf|max:10240',
             ]);
 
             $path = NULL;
+            $nameWithExtension = $request->file_name->getClientOriginalName();
 
             $path = FileSavingHelper::saveFile($request->file_name, $edocs->id, 'edocs');
 
             $edocs->update([
                 'path' => $path,
+                'file_name' => $nameWithExtension,
             ]);
 
         }
@@ -142,10 +132,70 @@ class BeviController extends Controller
         // logs
         activity('created')
             ->performedOn($edocs)
-            ->log(':causer.name has created edocs :subject.name');
+            ->log(':causer.name has created edoc :subject.control_number');
 
         return redirect()->route('home')->with([
             'message_success' => 'Edocs '.$edocs->control_number.' has been successfully created.'
+        ]);
+    }
+
+    public function revise(BeviAddRequest $request)
+    {
+        $user_id = Auth::user()->id;
+
+        $last_edoc = Edoc::withTrashed()->where('control_number', $request->control_number)->where('status', 'active')->first();  
+        if(!empty($last_edoc)) {
+
+            $last_edoc->update([
+                'status' => 'inactive',
+            ]);
+        
+        }
+
+        $revise_edocs = new Edoc([
+            'control_number' => $request->control_number,
+            'reference_number' => $request->reference_number,
+            'type_id' => $request->type_id,
+            'company_id' => $request->company_id,
+            'department_id' => $request->department_id,
+            'employee_id' => $request->employee_id,
+            'department_id' => $request->department_id,
+            'user_id' => $user_id,
+            'revision_number' => $request->revision_number,
+            'date_effectivity' => $request->date_effectivity,
+            'remarks' => $request->remarks,
+            'title' => $request->title,
+            'status' => $request->status,
+        ]);
+        $revise_edocs->save();
+
+
+        if(!empty($request->file_name)) {
+            $request->validate([
+                'file_name' => 'required|mimes:pdf|max:10240',
+            ]);
+
+            $path = NULL;
+            $nameWithExtension = $request->file_name->getClientOriginalName();
+
+            $path = FileSavingHelper::saveFile($request->file_name, $revise_edocs->id, 'edocs');
+
+            $revise_edocs->update([
+                'path' => $path,
+                'file_name' => $nameWithExtension,
+            ]);
+        }
+        
+
+        
+
+        // logs
+        activity('created')
+            ->performedOn($revise_edocs)
+            ->log(':causer.name has revise edoc :subject.control_number');
+
+        return redirect()->route('home')->with([
+            'message_success' => 'Edocs '.$revise_edocs->control_number.' has been successfully created.'
         ]);
     }
 
@@ -174,7 +224,7 @@ class BeviController extends Controller
 
         $status_arr = [
             'active' => 'Active ',
-            'revised' => 'Revised',
+            'inactive' => 'Inactive',
             'approval' => 'For Approval',
         ];
 
@@ -192,9 +242,11 @@ class BeviController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(EdocUpdateRequest $request, $id)
     {
         $edoc = Edoc::findOrFail(decrypt($id));
+
+        $changes_arr['old'] = $edoc->getOriginal();
 
         $edoc->update([
             'company_id' => $request->company_id,
@@ -202,13 +254,37 @@ class BeviController extends Controller
             'remarks' => $request->remarks,
             'title' => $request->title,
             'status' => $request->status,
+            'reference_number' => $request->reference_number,
+            'validity_date' => $request->validity_date,
+
         ]);
+
+        $changes_arr['changes'] = $edoc->getChanges();
+
+
+        if(!empty($request->file_name)) {
+            $request->validate([
+                'file_name' => 'required|mimes:pdf|max:5120',
+            ]);
+
+            $path = NULL;
+            $nameWithExtension = $request->file_name->getClientOriginalName();
+
+            $path = FileSavingHelper::saveFile($request->file_name, $edoc->id, 'edocs');
+
+            $edoc->update([
+                'path' => $path,
+                'file_name' => $nameWithExtension,
+            ]);
+        }
+
         
 
         // logs
         activity('updated')
             ->performedOn($edoc)
-            ->log(':causer.name has updated edoc :subject.name');
+            ->withProperties($changes_arr)
+            ->log(':causer.name has updated edoc :subject.control_number');
 
         return back()->with([
             'message_success' => 'Edocs '.$edoc->control_number.' has been successfully updated.'
