@@ -40,6 +40,21 @@
 
 <script>
     $(function() {
+        $('body').on('click', '.btn-revise', function(e) {
+            e.preventDefault();
+            let data = {
+                id: $(this).data('id'),
+                department: $(this).data('department'),
+                type: $(this).data('type'),
+            };
+            Livewire.dispatch('setReviseEdocs', { data });
+            $('#modal-revise').modal('show');
+        });
+    });
+</script>
+
+<script>
+    $(function() {
         $('body').on('click', '.btn-view', function(e) {
             e.preventDefault();
             let data = {

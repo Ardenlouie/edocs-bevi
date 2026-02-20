@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <select name="" class="form-control form-control-md text-uppercase" wire:model.lazy="status">
                                         <option value="active">ACTIVE</option>
-                                        <option value="revised">REVISED</option>
+                                        <option value="inactive">INACTIVE</option>
                                 </select>
                             </div>
                         </div>
@@ -80,8 +80,10 @@
                                 </div>
                                
                                  <div class="col-lg-2 text-center border-bottom pb-1">
-                                    <b>REFERENCE NO.</b><br> 
-                                    <b>{{$edoc->reference_number}}</b><br> 
+                                    <b>REVISION NO.</b><br> 
+                                    <b>
+                                    <span class="badge bg-purple">{{$edoc->revision_number}}</span>
+                                    </b><br>
 
                                 </div>
                             
@@ -103,8 +105,8 @@
                                             <span class="badge badge-danger">PENDING</span>
                                         @elseif($edoc->status == 'active')
                                             <span class="badge badge-success">ACTIVE</span>
-                                        @elseif($edoc->status == 'revised')
-                                            <span class="badge badge-danger">REVISED</span>
+                                        @elseif($edoc->status == 'inactive')
+                                            <span class="badge badge-danger">INACTIVE</span>
                                         @else
                                         @endif
                                     </b><br>
@@ -115,7 +117,7 @@
                                     <b></b><br> 
                                     <b>  
                                     @can('edoc access')
-                                        <a href="#" title="view" data-id="{{$edoc->id}}" class="btn-view btn ">
+                                        <a href="#" title="view" wire:key="view-{{$edoc->id}}" data-id="{{$edoc->id}}" class="btn-view btn ">
                                             <i class="fa fa-eye text-success"></i>
                                         </a>
                                     @endcan
@@ -124,8 +126,13 @@
                                             <i class="fa fa-pen-alt text-warning"></i>
                                         </a>
                                     @endcan
+                                    @can('hr access')
+                                        <a href="#" title="revise" wire:key="revise-{{$edoc->id}}" data-id="{{$edoc->id}}" data-type="{{$type->id}}" data-department="1" class="btn-revise btn ">
+                                            <i class="fa fa-clock text-purple"></i>
+                                        </a>
+                                    @endcan
                                     @can('edoc delete')
-                                        <a href="#" title="delete" data-id="{{encrypt($edoc->id)}}" class="btn-delete btn ">
+                                        <a href="#" title="delete" wire:key="delete-{{$edoc->id}}" data-id="{{encrypt($edoc->id)}}" class="btn-delete btn ">
                                             <i class="fa fa-trash-alt text-danger"></i>
                                         </a>
                                     @endcan
@@ -147,7 +154,7 @@
                 </div>
             </div>
             @endif
-           <div class="modal fade" id="modal-view">
+            <div class="modal fade" id="modal-view">
                 <div class="modal-dialog modal-xl">
                     <livewire:view-document />
                 </div>
@@ -157,6 +164,12 @@
                     <livewire:delete-model />
                 </div>
             </div>
+            <div class="modal fade" id="modal-revise">
+                <div class="modal-dialog modal-lg">
+                    <livewire:revise />
+                </div>
+            </div>
+            
 
         </div>
         </div>

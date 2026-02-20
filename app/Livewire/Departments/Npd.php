@@ -75,7 +75,7 @@ class Npd extends Component
                     $query->where('status', $this->status);
                 }
 
-            });
+            })->orderBy('created_at', 'desc');
 
         if($this->item_per_page == 'all') {
             $edocs = $edocs->get();

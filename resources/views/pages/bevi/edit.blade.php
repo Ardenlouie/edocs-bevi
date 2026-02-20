@@ -7,7 +7,7 @@
 
 {{-- Content body: main page content --}}
 @section('content_body')
-   <form action="{{ route('bevi.update', encrypt($edoc->id)) }}" method="POST" id="update_edoc">
+   <form action="{{ route('bevi.update', encrypt($edoc->id)) }}" method="POST" id="update_edoc" enctype="multipart/form-data">
     @csrf                           
 
         <div class="card">
@@ -98,11 +98,33 @@
                             </select>
                         </div>
                     </div>
-        
-
-
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            {{ html()->label(__('File'), 'file_name')->class(['mb-0']) }}
+                            <h6>{{$edoc->file_name}}</h6>
+                            <!-- <input type="file" class="form-control" name="file_name" form="update_edoc" value="{{$edoc->file_name}}" accept="application/pdf"> -->
+                            <input
+                                    form="update_edoc"
+                                    type="file"
+                                    id="file_name"
+                                    name="file_name"
+                                    accept="application/pdf"
+                                    class="form-control {{ $errors->has('file_name') ? 'is-invalid' : '' }}"
+                                > 
+                            <small class="text-danger">{{$errors->first('file_name')}}</small>
+                        </div>
+                    </div>
                 </div>
-
+                <div class="mt-3" wire:ignore>
+                    <b>DOCUMENT PREVIEW:</b>
+                    <iframe
+                        src="{{ asset('/'.$edoc->path) }}"
+                        id="pdfPreview"
+                        width="100%"
+                        height="400"
+                        style="border:1px solid #ccc;"
+                    ></iframe>
+                </div>
 
             </div>
             <div class="card-footer text-right">
@@ -120,5 +142,17 @@
 
 {{-- Push extra scripts --}}
 @push('js')
+<script>
 
+    document.getElementById('file_name').addEventListener('change', function () {
+        const file = this.files[0];
+        const iframe = document.getElementById('pdfPreview');
+
+        if (file && file.type === 'application/pdf') {
+            iframe.src = URL.createObjectURL(file);
+        } else {
+            iframe.src = '';
+        }
+    });
+</script>
 @endpush

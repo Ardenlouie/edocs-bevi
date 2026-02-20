@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <select name="" class="form-control form-control-md text-uppercase" wire:model.lazy="status">
                                         <option value="active">ACTIVE</option>
-                                        <option value="revised">REVISED</option>
+                                        <option value="inactive">INACTIVE</option>
                                 </select>
                             </div>
                         </div>
@@ -103,8 +103,8 @@
                                             <span class="badge badge-danger">PENDING</span>
                                         @elseif($edoc->status == 'active')
                                             <span class="badge badge-success">ACTIVE</span>
-                                        @elseif($edoc->status == 'revised')
-                                            <span class="badge badge-danger">REVISED</span>
+                                        @elseif($edoc->status == 'inactive')
+                                            <span class="badge badge-danger">INACTIVE</span>
                                         @else
                                         @endif
                                     </b><br>
@@ -115,7 +115,7 @@
                                     <b></b><br> 
                                     <b>  
                                     @can('edoc access')
-                                        <a href="#" title="view" data-id="{{$edoc->id}}" class="btn-view btn ">
+                                        <a href="#" title="view" wire:key="view-{{$edoc->id}}" data-id="{{$edoc->id}}" class="btn-view btn ">
                                             <i class="fa fa-eye text-success"></i>
                                         </a>
                                     @endcan
@@ -124,8 +124,13 @@
                                             <i class="fa fa-pen-alt text-warning"></i>
                                         </a>
                                     @endcan
+                                    @can('finance access')
+                                        <a href="#" title="revise" wire:key="revise-{{$edoc->id}}" data-id="{{$edoc->id}}" data-type="{{$type->id}}" data-department="7" class="btn-revise btn ">
+                                            <i class="fa fa-clock text-purple"></i>
+                                        </a>
+                                    @endcan
                                     @can('edoc delete')
-                                        <a href="#" title="delete" data-id="{{encrypt($edoc->id)}}" class="btn-delete btn ">
+                                        <a href="#" title="delete" wire:key="delete-{{$edoc->id}}" data-id="{{encrypt($edoc->id)}}" class="btn-delete btn ">
                                             <i class="fa fa-trash-alt text-danger"></i>
                                         </a>
                                     @endcan
@@ -155,6 +160,11 @@
             <div class="modal fade" id="modal-delete">
                 <div class="modal-dialog">
                     <livewire:delete-model />
+                </div>
+            </div>
+            <div class="modal fade" id="modal-revise">
+                <div class="modal-dialog modal-lg">
+                    <livewire:revise />
                 </div>
             </div>
 

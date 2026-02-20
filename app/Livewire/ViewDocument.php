@@ -23,15 +23,16 @@ class ViewDocument extends Component
     {     
 
         $this->edoc_id = $data['id'];
+        $this->edocs= Edoc::where('id', $this->edoc_id)->first();
+
+        // activity('view')
+        //     ->performedOn($this->edocs)
+        //     ->log(':causer.name has viewed edoc :subject.control_number');
 
     }
 
     public function render()
     {
-
-
-        $this->edocs= Edoc::where('id', $this->edoc_id)->first();
-
         return view('livewire.view-document');
     }
 }

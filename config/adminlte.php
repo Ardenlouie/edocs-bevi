@@ -303,7 +303,7 @@ return [
             'text'      => 'Home',
             'url'       => 'home',
             'icon'      => 'fas fa-fw fa-home',
-            'can'       => 'user access',
+            'can'       => 'edoc access',
             'active'    => ['home*']
         ],
         [

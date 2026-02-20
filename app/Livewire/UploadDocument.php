@@ -16,7 +16,7 @@ class UploadDocument extends Component
     use WithFileUploads;
 
     public $pdf, $now, $previewImage, $edocs, $department_id=1, $type_id=1, $company_id=1, 
-    $control_number, $edoc_file, $company_name, $revision_number=000;
+    $control_number, $edoc_file, $company_name, $revision_number='000';
 
 
     protected $listeners = [
@@ -36,28 +36,11 @@ class UploadDocument extends Component
         $type_name = $type->prefix;
         $department_name = $department->prefix;
         
-        $edoc = Edoc::withTrashed()->where('type_id', $this->type_id)->where('department_id', $this->department_id)->orderBy('control_number', 'DESC')
-                ->first();  
-        if(!empty($edoc)) {
-            $latest_control_number = $edoc->control_number;
-            list($type, $last_number, $date, $department) = explode('-', $latest_control_number);
-
-            $number = ($type_name == "$type-" && $department == $department_name) ? ((int)$last_number + 1) : 1;
-
-            $this->revision_number = str_pad($number - 1, 3, '0', STR_PAD_LEFT);
-
-
-        } else {
-            $this->revision_number = '000';
-        }
-
-        
 
     }
 
 
     private function generateControlNumber() {
-        $date_code = date('Y');
         $type = Type::where('id', $this->type_id)->first();
         $department = Department::where('id', $this->department_id)->first();
 
@@ -65,13 +48,13 @@ class UploadDocument extends Component
         $department_name = $department->prefix;
 
         do {
-            $control_number = $type_name.'001-'.$date_code.'-'.$department_name;
+            $control_number = $type_name.'001-'.$department_name;
             // get the most recent sales order
             $edoc = Edoc::withTrashed()->where('type_id', $this->type_id)->where('department_id', $this->department_id)->orderBy('control_number', 'DESC')
                 ->first();  
             if(!empty($edoc)) {
                 $latest_control_number = $edoc->control_number;
-                list($type, $last_number, $date, $department) = explode('-', $latest_control_number);
+                list($type, $last_number, $department) = explode('-', $latest_control_number);
                 // Increment the number based on the date
                 $number = ($type_name == "$type-" && $department == $department_name) ? ((int)$last_number + 1) : 1;
 
@@ -79,9 +62,7 @@ class UploadDocument extends Component
                 $formatted_number = str_pad($number, 3, '0', STR_PAD_LEFT);
 
                 // Construct the new control number
-                $control_number = $type_name."$formatted_number-$date_code-$department_name";
-
-                
+                $control_number = $type_name."$formatted_number-$department_name";
             }
 
         } while(Edoc::withTrashed()->where('type_id', $this->type_id)->where('department_id', $this->department_id)->where('control_number', $control_number)->exists());
@@ -101,9 +82,6 @@ class UploadDocument extends Component
 
     public function render()
     {
-        
-        
-
         $company = Company::where('id', $this->company_id)->first();
 
         if($company->name == 'BEVI'){

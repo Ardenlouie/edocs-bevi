@@ -1,9 +1,9 @@
 <div>
-    <form action="{{ route('bevi.store') }}" method="POST" id="add_edocs" enctype="multipart/form-data">
+    <form action="{{ route('bevi.revise') }}" method="POST" id="revise_edocs" enctype="multipart/form-data">
         @csrf                          
         <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h4 class="modal-title">UPLOAD DOCUMENT</h4>
+            <div class="modal-header bg-purple">
+                <h4 class="modal-title">REVISE DOCUMENT</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -17,7 +17,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="revision_number">REVISION NO.:</label>
-                            <input type="text" name="revision_number" value="{{$revision_number}}" form="add_edocs" class="form-control" disabled>
+                            <input type="text" name="revision_number" value="{{$revision_number}}" form="revise_edocs" class="form-control" disabled>
 
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                             <select name="company_id"
                                 id="company_id"
                                 class="form-control{{ $errors->has('company_id') ? ' is-invalid' : '' }}"
-                                form="add_edocs"
+                                form="revise_edocs"
                                 wire:model.lazy="company_id"
                             >
                                 @foreach ($companies as $key => $value)
@@ -45,7 +45,7 @@
                             <select name="department_id"
                                 id="department_id"
                                 class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}"
-                                form="add_edocs"
+                                form="revise_edocs"
                                 wire:model.lazy="department_id"
                                 disabled
                             >
@@ -61,7 +61,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="reference_number">REFERENCE NO.:</label>
-                            <input type="text" name="reference_number" form="add_edocs" class="form-control">
+                            <input type="text" name="reference_number" form="revise_edocs" class="form-control">
 
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                             <select name="type_id"
                                 id="type_id"
                                 class="form-control{{ $errors->has('type_id') ? ' is-invalid' : '' }}"
-                                form="add_edocs"
+                                form="revise_edocs"
                                 wire:model.lazy="type_id"
                                 disabled
                             >
@@ -90,9 +90,10 @@
                         <div class="form-group">
                             <label for="">FILE:</label>
                                 <input
-                                    form="add_edocs"
+                                    form="revise_edocs"
                                     type="file"
-                                    id="file_name"
+                                    id="file_name_revise"
+                     
                                     name="file_name"
                                     accept="application/pdf"
                                     class="form-control {{ $errors->has('pdf') ? 'is-invalid' : '' }}"
@@ -111,7 +112,7 @@
                             <label for="">DATE OF EFFECTIVITY:</label>
                             <input
                                 type="date"
-                                form="add_edocs"
+                                form="revise_edocs"
                                 name="date_effectivity"
                                 value="{{ session('date_effectivity') ?? now()->format('Y-m-d') }}"
                                 class="form-control {{ $errors->has('date_effectivity') ? ' is-invalid' : '' }}"
@@ -123,7 +124,7 @@
                             <label for="">TITLE:</label>
                             <input
                                 type="text"
-                                form="add_edocs"
+                                form="revise_edocs"
                                 name="title"
                                 class="form-control"
                             >
@@ -132,7 +133,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="remarks">REMARKS:</label>
-                            <input type="text" name="remarks" form="add_edocs" class="form-control">
+                            <input type="text" name="remarks" form="revise_edocs" class="form-control">
 
                         </div>
                     </div>
@@ -141,45 +142,42 @@
                 <div class="col-lg-2 col-md-6 col-sm-12" wire:loading><i class="spinner-border"></i></div>
             
 
-            <!-- PDF Preview -->
-            <div class="mt-3" wire:ignore>
-                <b>DOCUMENT PREVIEW:</b>
-                <iframe
-                    id="pdfPreview"
-                    width="100%"
-                    height="400"
-                    style="border:1px solid #ccc;"
-                ></iframe>
+                <!-- PDF Preview -->
+                <div class="mt-3" wire:ignore>
+                    <b>DOCUMENT PREVIEW:</b>
+                    <iframe
+                        id="pdfPreviewRevise"
+                        width="100%"
+                        height="400"
+                        style="border:1px solid #ccc;"
+                    ></iframe>
+                </div>
             </div>
 
-            @if (session()->has('success'))
-                <div class="alert alert-success mt-2">
-                    {{ session('success') }}
-                </div>
-            @endif
-            <input type="hidden" name="company_id" form="add_edocs" value="{{$company_id}}"> 
-            <input type="hidden" name="status" form="add_edocs" value="active"> 
-            <input type="hidden" name="control_number" form="add_edocs" value="{{$control_number}}"> 
-            <input type="hidden" name="department_id" form="add_edocs" value="{{$department_id}}"> 
-            <input type="hidden" name="type_id" form="add_edocs" value="{{$type_id}}"> 
-            <input type="hidden" name="revision_number" form="add_edocs" value="{{$revision_number}}"> 
+            <input type="hidden" name="company_id" form="revise_edocs" value="{{$company_id}}"> 
+            <input type="hidden" name="status" form="revise_edocs" value="active"> 
+            <input type="hidden" name="control_number" form="revise_edocs" value="{{$control_number}}"> 
+            <input type="hidden" name="department_id" form="revise_edocs" value="{{$department_id}}"> 
+            <input type="hidden" name="type_id" form="revise_edocs" value="{{$type_id}}"> 
+            <input type="hidden" name="revision_number" form="revise_edocs" value="{{$revision_number}}"> 
 
             <div class="modal-footer text-right">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">Upload</button>
+                <button type="submit" class="btn bg-purple" wire:loading.attr="disabled">Upload</button>
             </div>
         </div>
     </form>
     <script>
-        document.getElementById('file_name').addEventListener('change', function () {
-            const file = this.files[0];
-            const iframe = document.getElementById('pdfPreview');
+        document.getElementById('file_name_revise').addEventListener('change', function () {
+            const revise_file = this.files[0];
+            const revise_iframe = document.getElementById('pdfPreviewRevise');
 
-            if (file && file.type === 'application/pdf') {
-                iframe.src = URL.createObjectURL(file);
+            if (revise_file && revise_file.type === 'application/pdf') {
+                revise_iframe.src = URL.createObjectURL(revise_file);
             } else {
-                iframe.src = '';
+                revise_iframe.src = '';
             }
         });
     </script>
 </div>
+

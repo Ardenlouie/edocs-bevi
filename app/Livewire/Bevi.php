@@ -21,6 +21,7 @@ class Bevi extends Component
 
     public function changePage($page_selected) {
         $this->page_selected = $page_selected;
+
     }
 
     public function updatedSearch() {
@@ -52,9 +53,6 @@ class Bevi extends Component
 
         $this->type_id = $type_id;
 
- 
-
-
         $this->resetPage('edocs-page');
 
     }
@@ -79,7 +77,7 @@ class Bevi extends Component
                     $query->where('status', $this->status);
                 }
 
-            });
+            })->orderBy('created_at', 'desc');
 
         if($this->item_per_page == 'all') {
             $edocs = $edocs->get();
