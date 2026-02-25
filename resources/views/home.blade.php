@@ -71,12 +71,11 @@
             <div class="card-header border-0">
                 <h3 class="card-title">Recent Uploads</h3>
                 <div class="card-tools">
-                <a href="#" class="btn btn-tool btn-sm">
-                    <i class="fas fa-download"></i>
-                </a>
-                <a href="#" class="btn btn-tool btn-sm">
-                    <i class="fas fa-bars"></i>
-                </a>
+                {{ html()->form('GET', route('home'))->open() }}
+                    <div class="form-group">
+                        {{ html()->input('text', 'search', $search)->placeholder(__('Search'))->class(['form-control', 'form-control-md'])}}
+                    </div>
+                {{ html()->form()->close() }}
                 </div>
             </div>
             <div class="card-body table-responsive p-0">

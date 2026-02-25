@@ -80,8 +80,10 @@
                                 </div>
                                
                                  <div class="col-lg-2 text-center border-bottom pb-1">
-                                    <b>REFERENCE NO.</b><br> 
-                                    <b>{{$edoc->reference_number}}</b><br> 
+                                    <b>REVISION NO.</b><br> 
+                                    <b>
+                                    <span class="badge bg-purple">{{$edoc->revision_number}}</span>
+                                    </b><br>
 
                                 </div>
                             

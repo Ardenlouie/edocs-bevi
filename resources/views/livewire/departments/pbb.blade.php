@@ -27,9 +27,9 @@
                 @foreach($types as $key => $type)
                 <div class="tab-pane {{ $activeTab === 'tab'.$key ? 'active' : '' }}" id="tab{{$key}}">
                     <div class="row">
-                        @can('finance access')
+                        @can('pbb access')
                         <div class="col-lg-12 col-md-6 col-sm-12 text-right">
-                            <a href="#" title="upload" data-id="{{$key}}" data-department="7" class="btn-upload btn btn-primary"><i class="fas fa-plus mr-1"></i>UPLOAD</a>
+                            <a href="#" title="upload" data-id="{{$key}}" data-department="11" class="btn-upload btn btn-primary"><i class="fas fa-plus mr-1"></i>UPLOAD</a>
                         </div>
                         @endcan
                         <div class="col-lg-3 col-md-6 col-sm-12">
@@ -67,6 +67,8 @@
                                     <img src="{{asset('/images/bevanobg.png')}}" alt="product photo" class="product-img" height="50" width="80">
                                     @elseif($edoc->company_id == 3)
                                     <img src="{{asset('/images/biginobg.png')}}" alt="product photo" class="product-img" height="50" width="100">
+                                    @elseif($edoc->company_id == 4)
+                                    <img src="{{asset('/images/pbb.png')}}" alt="product photo" class="product-img" height="50" width="100">
                                     @else
                                     @endif
                                     <br>
@@ -121,13 +123,13 @@
                                             <i class="fa fa-eye text-success"></i>
                                         </a>
                                     @endcan
-                                    @can('finance access')
+                                    @can('pbb access')
                                         <a href="{{route('bevi.edit',encrypt($edoc->id))}}" title="edit">
                                             <i class="fa fa-pen-alt text-warning"></i>
                                         </a>
                                     @endcan
-                                    @can('finance access')
-                                        <a href="#" title="revise" wire:key="revise-{{$edoc->id}}" data-id="{{$edoc->id}}" data-type="{{$type->id}}" data-department="7" class="btn-revise btn ">
+                                    @can('pbb access')
+                                        <a href="#" title="revise" wire:key="revise-{{$edoc->id}}" data-id="{{$edoc->id}}" data-type="{{$type->id}}" data-department="11" class="btn-revise btn ">
                                             <i class="fa fa-clock text-purple"></i>
                                         </a>
                                     @endcan

@@ -70,7 +70,7 @@
 
                     <div class="col-12">
                         @foreach($roles as $role)
-                            <button class="btn btn-{{in_array($role->name, $user_roles) ? 'success' : 'default'}} btn-role" data-id="{{$role->name}}">{{$role->name}}</button>
+                            <button class="btn btn-{{in_array($role->name, $user_roles) ? 'success' : 'default'}} btn-role text-uppercase" data-id="{{$role->name}}">{{$role->name}}</button>
                         @endforeach
                     </div>
                 </div>

@@ -21,7 +21,7 @@
         </li>
 
         <!-- language toggle -->
-        <li class="nav-item dropdown">
+        <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 @php
                     $locale = app()->getLocale();
@@ -40,13 +40,15 @@
                     <span class="fi fi-cn shadow"></span> Chinese
                 </a>
             </div>
-        </li>
+        </li> -->
 
         {{-- Dark mode toggle --}}
         <livewire:darkmode-toggle />
 
         <!-- Notifications Dropdown Menu -->
-        <livewire:notification/>
+       
+
+        
     @endsection
 @endauth
 

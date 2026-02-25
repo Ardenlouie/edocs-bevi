@@ -7,7 +7,7 @@ use App\Http\Controllers\{
     RoleController, UserController, CompanyController,
     SystemLogController, SystemSettingController, HomeController,
     NotificationController, PositionController, OrgStructureController,
-    BeviController, BevaController
+    BeviController, BevaController, TypeController
 };
 
 /*
@@ -97,6 +97,17 @@ Route::group(['middleware' => ['auth', 'optimizeImages']], function() {
         Route::post('role/{id}', [RoleController::class, 'update'])->name('role.update')->middleware('permission:role edit');
     });
 
+    // TYPES ROUTES
+    Route::group(['middleware' => 'permission:type access'], function() {
+        Route::get('types', [TypeController::class, 'index'])->name('type.index');
+        Route::get('type/create', [TypeController::class, 'create'])->name('type.create')->middleware('permission:type create');
+        Route::post('type', [TypeController::class, 'store'])->name('type.store')->middleware('permission:type create');
+
+        Route::get('type/{id}/edit', [TypeController::class, 'edit'])->name('type.edit')->middleware('permission:type edit');
+        Route::post('type/{id}', [TypeController::class, 'update'])->name('type.update')->middleware('permission:type edit');
+
+    });
+
     // USERS ROUTES
     Route::group(['middleware' => 'permission:user access'], function() {
         Route::get('users', [UserController::class, 'index'])->name('user.index');
@@ -121,6 +132,7 @@ Route::group(['middleware' => ['auth', 'optimizeImages']], function() {
         Route::get('scm', [BeviController::class, 'scm'])->name('bevi.scm');
         Route::get('npd', [BeviController::class, 'npd'])->name('bevi.npd');
         Route::get('ecom', [BeviController::class, 'ecom'])->name('bevi.ecom');
+        Route::get('pbb', [BeviController::class, 'pbb'])->name('bevi.pbb');
         Route::get('bevi/edit/{id}', [BeviController::class, 'edit'])->name('bevi.edit');
         Route::post('bevi/store', [BeviController::class, 'store'])->name('bevi.store');
         Route::post('bevi/revise', [BeviController::class, 'revise'])->name('bevi.revise');
