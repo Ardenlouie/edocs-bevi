@@ -89,8 +89,8 @@ return [
             'path' => 'images/nobglogo.png',
             'alt' => 'Auth Logo',
             'class' => 'xd-block mx-auto',
-            'width' => 500,
-            'height' => 500,
+            'width' => 350,
+            'height' => 300,
         ],
     ],
 
@@ -380,6 +380,13 @@ return [
                     'can'       => 'edoc access',
                     'active'    => ['ecom', 'ecom*']
                 ],
+                [
+                    'text'      => 'PBB',
+                    'url'       => 'pbb',      
+                    'icon'      => 'fas fa-fw fa-water',
+                    'can'       => 'edoc access',
+                    'active'    => ['pbb', 'pbb*']
+                ],
             ],
         ],
         
@@ -387,7 +394,7 @@ return [
             'text'  => 'settings',
             'url'   => '#',
             'icon'  => 'fa fa-fw fa-cog',
-            'can'   => ['user access', 'role access', 'company access', 'position access', 'system logs', 'system settings'],
+            'can'   => ['user access', 'role access', 'company access', 'position access', 'system logs', 'system settings', 'type access'],
             'submenu' => [
                 [
                     'text'      => 'org_structures',
@@ -410,13 +417,13 @@ return [
                     'can'       => 'company access',
                     'active'    => ['companies', 'company*']
                 ],
-                // [
-                //     'text'      => 'Types',
-                //     'url'       => 'types',
-                //     'icon'      => 'fas fa-fw fa-file-alt',
-                //     'can'       => 'company access',
-                //     'active'    => ['types', 'type*']
-                // ],
+                [
+                    'text'      => 'Types',
+                    'url'       => 'types',
+                    'icon'      => 'fas fa-fw fa-file-alt',
+                    'can'       => 'type access',
+                    'active'    => ['types', 'type*']
+                ],
                 [
                     'text'      => 'users',
                     'url'       => 'users',

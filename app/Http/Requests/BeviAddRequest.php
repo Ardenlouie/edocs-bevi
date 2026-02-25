@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Models\Edoc;
+use Illuminate\Validation\Rule;
 
 
 class BeviAddRequest extends FormRequest
@@ -30,7 +32,11 @@ class BeviAddRequest extends FormRequest
                 'required',
             ], 
             'control_number' => [
-                'required'
+                'required',
+                Rule::unique((new Edoc)->getTable())
+                ->where(function ($query) {
+                    return $query->where('status', 'active');
+                })
             ],
             
         ];

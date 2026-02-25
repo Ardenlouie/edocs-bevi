@@ -14,6 +14,13 @@
 
         {{-- Custom left links --}}
         @yield('content_top_nav_left')
+
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <strong>{{session('db_connection') == 'mysql' ? 'LIVE' : 'TEST'}} SERVER</strong>
+            </a>
+        </li>
+
     </ul>
 
     {{-- Navbar right links --}}

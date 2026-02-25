@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 {{-- Customize layout sections --}}
-@section('subtitle', __('adminlte::roles.role_list'))
-@section('content_header_title', __('adminlte::roles.roles'))
-@section('content_header_subtitle', __('adminlte::roles.role_list'))
+@section('subtitle', __('TYPES List'))
+@section('content_header_title', __('TYPES'))
+@section('content_header_subtitle', __('TYPES List'))
 
 {{-- Content body: main page content --}}
 @section('content_body')
@@ -11,26 +11,26 @@
         <div class="card-header py-2">
             <div class="row">
                 <div class="col-lg-6 align-middle">
-                    <strong class="text-lg">{{__('adminlte::roles.role_list')}}</strong>
+                    <strong class="text-lg">{{__('Type List')}}</strong>
                 </div>
                 <div class="col-lg-6 text-right">
-                    @can('role create')
-                        <a href="{{route('role.create')}}" class="btn btn-primary btn-xs">
+                    @can('type create')
+                        <a href="{{route('type.create')}}" class="btn btn-primary btn-xs">
                             <i class="fa fa-file"></i>
-                            {{__('adminlte::roles.new_role')}}
+                            {{__('New Type')}}
                         </a>
                     @endcan
                 </div>
             </div>
         </div>
         <div class="card-body">
-            
-            {{ html()->form('GET', route('role.index'))->open() }}
+
+            {{ html()->form('GET', route('type.index'))->open() }}
                 <div class="row mb-1">
                     <div class="col-lg-4">
                         <div class="form-group">
                             {{ html()->label(__('adminlte::utilities.search'), 'search')->class('mb-0') }}
-                            {{ html()->input('text', 'search', $search)->placeholder(__('adminlte::utilities.search'))->class(['form-control', 'form-control-sm'])}}
+                            {{ html()->input('text', 'search', $search)->placeholder(__('Description'))->class(['form-control', 'form-control-sm'])}}
                         </div>
                     </div>
                 </div>
@@ -38,36 +38,32 @@
             
             <div class="row">
                 <div class="col-12 table-responsive">
-                    <table class="table table-sm table-striped table-hover mb-0 rounded text-uppercase">
-                        <thead class="text-center bg-dark">
+                    <table class="table table-sm table-striped table-hover mb-0 rounded">
+                        <thead class="tex-center bg-dark">
                             <tr class="text-center">
                                 <th>{{__('adminlte::utilities.name')}}</th>
-                                <th>{{__('adminlte::users.users')}}</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($roles as $role)
+                            @foreach($types as $type)
                                 <tr>
                                     <td class="align-middle text-center">
-                                        {{$role->name}}
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        {{$role->users()->count()}}
+                                        {{$type->description}}
                                     </td>
                                     <td class="align-middle text-right p-0 pr-1">
-                                        <a href="{{route('role.show', encrypt($role->id, 'roles'))}}" class="btn btn-info btn-xs mb-0 ml-0">
+                                        <!-- <a href="" class="btn btn-info btn-xs mb-0 ml-0">
                                             <i class="fa fa-list"></i>
                                             {{__('adminlte::utilities.view')}}
-                                        </a>
-                                        @can('role edit')
-                                            <a href="{{route('role.edit', encrypt($role->id, 'roles'))}}" class="btn btn-success btn-xs mb-0 ml-0">
+                                        </a> -->
+                                        @can('type edit')
+                                            <a href="{{route('type.edit', encrypt($type->id))}}" class="btn btn-success btn-xs mb-0 ml-0">
                                                 <i class="fa fa-pen-alt"></i>
                                                 {{__('adminlte::utilities.edit')}}
                                             </a>
                                         @endcan
-                                        @can('role delete')
-                                            <a href="#" class="btn btn-danger btn-xs mb-0 ml-0 btn-delete" data-id="{{encrypt($role->id)}}">
+                                        @can('type delete')
+                                            <a href="" class="btn btn-danger btn-xs mb-0 ml-0 btn-delete" data-id="{{encrypt($type->id)}}">
                                                 <i class="fa fa-trash-alt"></i>
                                                 {{__('adminlte::utilities.delete')}}
                                             </a>
@@ -82,7 +78,7 @@
 
         </div>
         <div class="card-footer">
-            {{$roles->links()}}
+            {{$types->links()}}
         </div>
     </div>
 @stop
@@ -90,7 +86,11 @@
 {{-- Push extra CSS --}}
 @push('css')
     {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .user-img {
+            height: 30px;
+        }
+    </style>
 @endpush
 
 {{-- Push extra scripts --}}
@@ -100,7 +100,7 @@
             $('body').on('click', '.btn-delete', function(e) {
                 e.preventDefault();
                 var id = $(this).data('id');
-                Livewire.dispatch('setDeleteModel', {type: 'Role', model_id: id});
+                Livewire.dispatch('setDeleteModel', {type: 'User', model_id: id});
                 $('#modal-delete').modal('show');
             });
         });

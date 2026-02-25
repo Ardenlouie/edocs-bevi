@@ -60,7 +60,7 @@
             @enderror
         </div>
 
-        <div class="input-group mb-3" hidden>
+        <div class="input-group mb-3">
 
             <select name="type" class="form-control @error('type') is-invalid @enderror" >
                 <option value="live" selected>LIVE SERVER</option>

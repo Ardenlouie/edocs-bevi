@@ -37,45 +37,51 @@ class BeviController extends Controller
         ]);
     }
 
-     public function local()
+    public function local()
     {
         return view('pages.bevi.local')->with([
         ]);
     }
 
-     public function global()
+    public function global()
     {
         return view('pages.bevi.global')->with([
         ]);
     }
 
-     public function marketing()
+    public function marketing()
     {
         return view('pages.bevi.marketing')->with([
         ]);
     }
 
-     public function finance()
+    public function finance()
     {
         return view('pages.bevi.finance')->with([
         ]);
     }
 
-     public function scm()
+    public function scm()
     {
         return view('pages.bevi.scm')->with([
         ]);
     }
 
-     public function npd()
+    public function npd()
     {
         return view('pages.bevi.npd')->with([
         ]);
     }
 
-     public function ecom()
+    public function ecom()
     {
         return view('pages.bevi.ecom')->with([
+        ]);
+    }
+
+    public function pbb()
+    {
+        return view('pages.bevi.pbb')->with([
         ]);
     }
 
@@ -129,12 +135,52 @@ class BeviController extends Controller
 
         }
 
+        $department = Department::findOrFail($request->department_id);
+       
+        switch($department->id) {
+            case 1:
+                $route = 'index';
+                break;
+            case 2:
+                $route = 'admin';
+                break;
+            case 3:
+                $route = 'it';
+                break;
+            case 4:
+                $route = 'local';
+                break;
+            case 5:
+                $route = 'global';
+                break;
+            case 6:
+                $route = 'marketing';
+                break;
+            case 7:
+                $route = 'finance';
+                break;
+            case 8:
+                $route = 'scm';
+                break;
+            case 9:
+                $route = 'npd';
+                break;
+            case 10:
+                $route = 'ecom';
+                break;
+            case 11:
+                $route = 'pbb';
+                break;
+            default:
+                $route = 'home';
+        }
+
         // logs
         activity('created')
             ->performedOn($edocs)
             ->log(':causer.name has created edoc :subject.control_number');
 
-        return redirect()->route('home')->with([
+        return redirect()->route('bevi.'.$route)->with([
             'message_success' => 'Edocs '.$edocs->control_number.' has been successfully created.'
         ]);
     }
