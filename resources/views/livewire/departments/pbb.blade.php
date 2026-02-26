@@ -12,14 +12,11 @@
                             </a>
                         </li>
                         @endforeach
-
                         <li class="nav-item">
                             <div wire:loading><i class="fa fa-spinner fa-spin"></i> Loading</div>
                         </li>
-                        <!-- Add more tabs as needed -->
                     </ul>
                 </div>
-                
             </div>
         </div>
         <div class="card-body">
@@ -34,19 +31,24 @@
                         @endcan
                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="form-group">
+                                <h6>SEARCH</h6>
                                 <input type="text" placeholder="Search" class="form-control form-control-md" wire:model.live ="search">
                             </div>
                         </div>
+                        @can('pbb access')
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <div class="form-group">
+                                <h6>STATUS</h6>
                                 <select name="" class="form-control form-control-md text-uppercase" wire:model.lazy="status">
-                                        <option value="active">ACTIVE</option>
-                                        <option value="inactive">INACTIVE</option>
+                                    <option value="active">ACTIVE</option>
+                                    <option value="inactive">INACTIVE</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-1 col-md-6 col-sm-12">
+                        @endcan
+                        <div class="col-lg-1 col-md-6 col-sm-12 ">
                             <div class="form-group">
+                                <h6>ITEMS PER PAGE</h6>
                                 <select class="form-control form-control-md" wire:model.lazy="item_per_page">
                                     <option value="all">All</option>
                                     <option value="5">5</option>
@@ -73,33 +75,33 @@
                                     @endif
                                     <br>
                                     <b>{{$edoc->control_number}}</b><br>
+                                    <b>
+                                    @if($edoc->confidential == 1)
+                                        <span class="badge bg-red"><i class="fas fa-lock"></i> CONFIDENTIAL</span>
+                                    @endif
+                                    </b>
                                 </div>
 
                                  <div class="col-lg-2 text-center border-bottom pb-1">
                                     <b>TITLE</b><br> 
                                     <b>{{$edoc->title}}</b><br> 
-
                                 </div>
                                
                                  <div class="col-lg-2 text-center border-bottom pb-1">
                                     <b>REVISION NO.</b><br> 
-                                    <b>
-                                    <span class="badge bg-purple">{{$edoc->revision_number}}</span>
-                                    </b><br>
-
+                                    <span class="badge bg-purple">{{$edoc->revision_number}}</span><br>
                                 </div>
                             
                                 <div class="col-lg-2 text-center border-bottom pb-1">
                                     <b>DATE EFFECTIVITY</b><br> 
                                     <b>{{date('m-d-Y', strtotime($edoc->date_effectivity))}}</b><br> 
-
                                 </div>
 
                                 <div class="col-lg-2 text-center border-bottom pb-1">
                                     <b>TYPE</b><br> 
                                     <span class="badge bg-yellow">{{$edoc->type->description}}</span><br> 
-
                                 </div>
+
                                 <div class="col-lg-1 text-center border-bottom pb-1">
                                     <b>STATUS</b><br> 
                                     <b>
@@ -127,8 +129,6 @@
                                         <a href="{{route('bevi.edit',encrypt($edoc->id))}}" title="edit">
                                             <i class="fa fa-pen-alt text-warning"></i>
                                         </a>
-                                    @endcan
-                                    @can('pbb access')
                                         <a href="#" title="revise" wire:key="revise-{{$edoc->id}}" data-id="{{$edoc->id}}" data-type="{{$type->id}}" data-department="11" class="btn-revise btn ">
                                             <i class="fa fa-clock text-purple"></i>
                                         </a>
@@ -156,7 +156,7 @@
                 </div>
             </div>
             @endif
-           <div class="modal fade" id="modal-view">
+            <div class="modal fade" id="modal-view">
                 <div class="modal-dialog modal-xl">
                     <livewire:view-document />
                 </div>
@@ -171,6 +171,7 @@
                     <livewire:revise />
                 </div>
             </div>
+            
 
         </div>
         </div>

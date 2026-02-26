@@ -16,7 +16,7 @@ class Revise extends Component
     use WithFileUploads;
 
     public $pdf, $now, $previewImage, $edocs, $department_id=1, $type_id=1, $company_id=1, 
-    $control_number, $edoc_file, $company_name, $revision_number="000", $edoc_id;
+    $control_number, $edoc_file, $company_name, $revision_number="000", $edoc_id, $confidential=true, $department_prefix, $title;
 
     protected $listeners = [
         'setReviseEdocs' => 'setReviseEdocs'
@@ -36,6 +36,8 @@ class Revise extends Component
 
         $type_name = $type->prefix;
         $department_name = $department->prefix;
+        $this->department_prefix = $department->prefix;
+
         
         $edoc = Edoc::withTrashed()->where('id', $edoc_id)->first();  
         if(!empty($edoc)) {

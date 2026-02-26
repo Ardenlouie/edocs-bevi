@@ -16,13 +16,12 @@ class UploadDocument extends Component
     use WithFileUploads;
 
     public $pdf, $now, $previewImage, $edocs, $department_id=1, $type_id=1, $company_id=1, 
-    $control_number, $edoc_file, $company_name, $revision_number='000';
+    $control_number, $edoc_file, $company_name, $revision_number='000', $confidential=true, $department_prefix, $title;
 
 
     protected $listeners = [
         'setUploadEdocs' => 'setUploadEdocs'
     ];
-
 
     public function setUploadEdocs($data)
     {   
@@ -30,12 +29,9 @@ class UploadDocument extends Component
         $this->type_id = $data['id'];
         $this->department_id = $data['department'];
 
-        $type = Type::where('id', $this->type_id)->first();
         $department = Department::where('id', $this->department_id)->first();
 
-        $type_name = $type->prefix;
-        $department_name = $department->prefix;
-        
+        $this->department_prefix = $department->prefix;
 
     }
 
@@ -76,23 +72,10 @@ class UploadDocument extends Component
     {
 
 
-
-       
     }
 
     public function render()
     {
-        $company = Company::where('id', $this->company_id)->first();
-
-        if($company->name == 'BEVI'){
-            $this->company_name = 'bevi';
-        } elseif($company->name == 'BEVA'){
-            $this->company_name = 'beva';
-        } elseif($company->name == 'BIGI'){
-            $this->company_name = 'bigi';
-        }
-
-        
         $companies = Company::all();
         $companies_arr = [];
         foreach($companies as $company) {
@@ -110,12 +93,10 @@ class UploadDocument extends Component
         $departments_arr = [];
         foreach($departments as $department) {
             $departments_arr[$department->id] = $department->name;
+          
         }
 
         $this->control_number = $this->generateControlNumber();
-
- 
-        
 
         return view('livewire.upload-document')->with([
             'companies' => $companies_arr,

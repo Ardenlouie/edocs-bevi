@@ -115,6 +115,8 @@ class BeviController extends Controller
             'remarks' => $request->remarks,
             'title' => $request->title,
             'status' => $request->status,
+            'confidential' => $request->confidential,
+
         ]);
         $edocs->save();
 
@@ -212,6 +214,8 @@ class BeviController extends Controller
             'remarks' => $request->remarks,
             'title' => $request->title,
             'status' => $request->status,
+            'confidential' => $request->confidential,
+
         ]);
         $revise_edocs->save();
 
@@ -231,6 +235,46 @@ class BeviController extends Controller
                 'file_name' => $nameWithExtension,
             ]);
         }
+
+        $department = Department::findOrFail($request->department_id);
+       
+        switch($department->id) {
+            case 1:
+                $route = 'index';
+                break;
+            case 2:
+                $route = 'admin';
+                break;
+            case 3:
+                $route = 'it';
+                break;
+            case 4:
+                $route = 'local';
+                break;
+            case 5:
+                $route = 'global';
+                break;
+            case 6:
+                $route = 'marketing';
+                break;
+            case 7:
+                $route = 'finance';
+                break;
+            case 8:
+                $route = 'scm';
+                break;
+            case 9:
+                $route = 'npd';
+                break;
+            case 10:
+                $route = 'ecom';
+                break;
+            case 11:
+                $route = 'pbb';
+                break;
+            default:
+                $route = 'home';
+        }
         
 
         
@@ -240,7 +284,7 @@ class BeviController extends Controller
             ->performedOn($revise_edocs)
             ->log(':causer.name has revise edoc :subject.control_number');
 
-        return redirect()->route('home')->with([
+        return redirect()->route('bevi.'.$route)->with([
             'message_success' => 'Edocs '.$revise_edocs->control_number.' has been successfully created.'
         ]);
     }
@@ -274,6 +318,46 @@ class BeviController extends Controller
             'approval' => 'For Approval',
         ];
 
+        $department = Department::findOrFail($edoc->department_id);
+       
+        switch($department->id) {
+            case 1:
+                $route = 'index';
+                break;
+            case 2:
+                $route = 'admin';
+                break;
+            case 3:
+                $route = 'it';
+                break;
+            case 4:
+                $route = 'local';
+                break;
+            case 5:
+                $route = 'global';
+                break;
+            case 6:
+                $route = 'marketing';
+                break;
+            case 7:
+                $route = 'finance';
+                break;
+            case 8:
+                $route = 'scm';
+                break;
+            case 9:
+                $route = 'npd';
+                break;
+            case 10:
+                $route = 'ecom';
+                break;
+            case 11:
+                $route = 'pbb';
+                break;
+            default:
+                $route = 'home';
+        }
+
 
 
         return view('pages.bevi.edit')->with([
@@ -281,6 +365,7 @@ class BeviController extends Controller
             'companies' => $companies_arr,
             'effectivityDate' => $effectivityDate,
             'status_arr' => $status_arr,
+            'route' => $route,
 
         ]);
     }
@@ -299,9 +384,8 @@ class BeviController extends Controller
             'date_effectivity' => $request->date_effectivity,
             'remarks' => $request->remarks,
             'title' => $request->title,
-            'status' => $request->status,
             'reference_number' => $request->reference_number,
-            'validity_date' => $request->validity_date,
+            'confidential' => $request->confidential,
 
         ]);
 
@@ -324,8 +408,7 @@ class BeviController extends Controller
             ]);
         }
 
-        
-
+    
         // logs
         activity('updated')
             ->performedOn($edoc)

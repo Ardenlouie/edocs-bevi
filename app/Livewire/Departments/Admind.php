@@ -36,10 +36,7 @@ class Admind extends Component
 
     public function mount() {
   
-
         $this->item_per_page = '5';
-
-        // $this->departments = Department::all()->keyBy('id');
 
         $this->types = Type::all()->keyBy('id');
 
@@ -60,7 +57,12 @@ class Admind extends Component
         $edocs = Edoc::where(function ($query) {
             if (!empty($this->department_id)) { 
                 $query->where('type_id', $this->type_id)->where('department_id', $this->department_id);
+                
             }
+            $query->unless(auth()->user()->can('admin access'), function ($q) {
+                $q->where('confidential', 0);
+            });
+            
         })
             ->whereHas('type', function($query) {
                 // searchs
@@ -68,6 +70,7 @@ class Admind extends Component
                     $query->where(function($qry) {
                         $qry->where('control_number', 'like', '%'.$this->search.'%')
                         ->orWhere('reference_number', 'like', '%'.$this->search.'%')
+                        ->orWhere('title', 'like', '%'.$this->search.'%')
                         ->orWhere('type_id', 'like', '%'.$this->search.'%');
                     });
                 }

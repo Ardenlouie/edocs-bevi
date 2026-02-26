@@ -31,12 +31,15 @@ class BeviAddRequest extends FormRequest
             'file_name' => [
                 'required',
             ], 
+            'title' => [
+                'required',
+            ], 
             'control_number' => [
                 'required',
-                Rule::unique((new Edoc)->getTable())
-                ->where(function ($query) {
-                    return $query->where('status', 'active');
-                })
+                // Rule::unique((new Edoc)->getTable())
+                // ->where(function ($query) {
+                //     return $query->where('status', 'active');
+                // })
             ],
             
         ];

@@ -71,60 +71,20 @@
             <div class="card-header border-0">
                 <h3 class="card-title">Recent Uploads</h3>
                 <div class="card-tools">
-                {{ html()->form('GET', route('home'))->open() }}
-                    <div class="form-group">
-                        {{ html()->input('text', 'search', $search)->placeholder(__('Search'))->class(['form-control', 'form-control-md'])}}
-                    </div>
-                {{ html()->form()->close() }}
+                    
                 </div>
             </div>
-            <div class="card-body table-responsive p-0">
-                <table class="table table-striped table-valign-middle">
-                    <thead>
-                        <tr>
-                            <th>Company</th>
-                            <th>Control No.</th>
-                            <th>Title</th>
-                            <th>Revision No.</th>
-                            <th>Department</th>
-                            <th>Uploaded By</th>
-                            <th>Upload Date</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($active_edocs as $edoc)
-                        <tr>
-                            <td>{{($edoc->company->name ?? '')}}</td>
-                            <td>{{($edoc->control_number ?? '')}}</td>
-                            <td>{{($edoc->title ?? '')}}</td>
-                            <td><span class="badge bg-purple">{{($edoc->revision_number ?? '')}}</span></td>
-                            <td>{{$edoc->department->name}}</td>
-                            <td>{{($edoc->user->name ?? '')}}</td>
-                            <td>{{\Carbon\Carbon::parse($edoc->created_at)->format('M d, Y')}}</td>
-                            <td>
-                                @if($edoc->status == null)
-                                    <span class="badge badge-danger">PENDING</span>
-                                @elseif($edoc->status == 'active')
-                                    <span class="badge badge-success">ACTIVE</span>
-                                @elseif($edoc->status == 'inactive')
-                                    <span class="badge badge-danger">INACTIVE</span>
-                                @else
-                                @endif
-                            </td>
-                            <td>
-                                @can('edoc access')
-                                    <a href="#" title="view" data-id="{{$edoc->id}}" class="btn-view btn ">
-                                        <i class="fa fa-eye text-success"></i>
-                                    </a>
-                                @endcan
-                            </td>
-
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            
+            
+            <div class="card-body ">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <input type="text" id="search_edocs" class="form-control form-control-xl" placeholder="Search">
+                    </div>
+                </div>
+                <div id="edocs_table_container" class="table-responsive p-0">
+                    @include('pages.bigi.partials') 
+                </div>
             </div>
             <div class="card-footer">
                 <div class="modal fade" id="modal-view">
@@ -161,4 +121,35 @@
         });
     });
 </script>
+<script>
+    let debounceTimer;
+
+    document.getElementById('search_edocs').addEventListener('input', function() {
+        let searchTerm = this.value;
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            fetchSearch(searchTerm);
+        }, 300); // 300ms delay
+    });
+
+    function fetchSearch(query) {
+        // Show a loading state if you want
+        document.getElementById('edocs_table_container').style.opacity = '0.5';
+
+        fetch(`/home/?search=${query}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('edocs_table_container').innerHTML = html;
+            document.getElementById('edocs_table_container').style.opacity = '1';
+        })
+        .catch(error => console.warn('Error fetching search:', error));
+    }
+</script>
+
 @endpush

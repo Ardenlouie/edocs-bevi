@@ -31,6 +31,7 @@ class Edoc extends Model
         'title',
         'remarks',
         'status',
+        'confidential',
     ];
 
     public function type() {
