@@ -61,7 +61,12 @@ class Ecom extends Component
         $edocs = Edoc::where(function ($query) {
             if (!empty($this->department_id)) { 
                 $query->where('type_id', $this->type_id)->where('department_id', $this->department_id);
+                
             }
+            $query->unless(auth()->user()->can('ecom access'), function ($q) {
+                $q->where('confidential', 0);
+            });
+            
         })
             ->whereHas('type', function($query) {
                 // searchs
@@ -69,6 +74,7 @@ class Ecom extends Component
                     $query->where(function($qry) {
                         $qry->where('control_number', 'like', '%'.$this->search.'%')
                         ->orWhere('reference_number', 'like', '%'.$this->search.'%')
+                        ->orWhere('title', 'like', '%'.$this->search.'%')
                         ->orWhere('type_id', 'like', '%'.$this->search.'%');
                     });
                 }

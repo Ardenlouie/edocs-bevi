@@ -17,7 +17,7 @@
                         <strong class="text-lg">Edit</strong>
                     </div>
                     <div class="col-lg-6 text-right">
-                        <a href="{{route('home')}}" class="btn btn-secondary btn-xs">
+                        <a href="{{route('bevi.'.$route)}}" class="btn btn-secondary btn-xs">
                             <i class="fa fa-caret-left"></i>
                             {{__('adminlte::utilities.back')}}
                         </a>
@@ -77,14 +77,14 @@
                             <small class="text-danger">{{$errors->first('date_effectivity')}}</small>
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <!-- <div class="col-lg-3">
                         <div class="form-group">
                             {{ html()->label(__('Validity Date'), 'remarks')->class(['mb-0']) }}
                             <input type="date" class="form-control" name="validity_date" form="update_edoc" value="{{$edoc->validity_date}}"> 
                             <small class="text-danger">{{$errors->first('validity_date')}}</small>
                         </div>
-                    </div>
-                    <div class="col-lg-3">
+                    </div> -->
+                    <!-- <div class="col-lg-3">
                         <div class="form-group">
                             {{ html()->label(__('Status'), 'status')->class(['mb-0']) }}
                             <select name="status"
@@ -97,8 +97,37 @@
                                 @endforeach
                             </select>
                         </div>
+                    </div> -->
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            {{ html()->label(__('Privacy Setting'), 'confidential')->class(['mb-2 d-block font-weight-bold']) }}
+
+                            <div class="custom-control custom-switch custom-switch-purple">
+                                <input type="hidden" name="confidential" value="0">
+                                
+                                <input 
+                                    form="update_edoc"
+                                    type="checkbox" 
+                                    name="confidential" 
+                                    class="custom-control-input {{ $errors->has('confidential') ? 'is-invalid' : '' }}" 
+                                    id="confidentialSwitch" 
+                                    value="1"
+                                    {{ old('confidential', $edoc->confidential) == 1 ? 'checked' : '' }}
+                                >
+                                
+                                <label class="custom-control-label" for="confidentialSwitch">
+                                    <span id="switch-text">
+                                        {{ old('confidential', $edoc->confidential) == 1 ? __('Yes (Confidential)') : __('No (Public)') }}
+                                    </span>
+                                </label>
+                            </div>
+
+                            @if($errors->has('confidential'))
+                                <small class="text-danger d-block mt-2">{{ $errors->first('confidential') }}</small>
+                            @endif
+                        </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="form-group">
                             {{ html()->label(__('File'), 'file_name')->class(['mb-0']) }}
                             <h6>{{$edoc->file_name}}</h6>
@@ -138,6 +167,41 @@
 @push('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+
+<style>
+    /* Change the 'On' color to Purple */
+    .custom-switch-purple .custom-control-input:checked ~ .custom-control-label::before {
+        background-color: #6f42c1; /* Purple */
+        border-color: #6439ac;
+    }
+
+    /* Optional: Make the switch larger for better UX */
+    .custom-switch {
+        padding-left: 2.5rem;
+    }
+
+    .custom-switch .custom-control-label::before {
+        left: -2.25rem;
+        width: 2rem;
+        pointer-events: all;
+        border-radius: 0.5rem;
+    }
+
+    .custom-switch .custom-control-label::after {
+        top: calc(0.25rem + 2px);
+        left: calc(-2.25rem + 2px);
+        width: calc(1rem - 4px);
+        height: calc(1rem - 4px);
+        background-color: #adb5bd;
+        border-radius: 0.5rem;
+    }
+
+    .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+        background-color: #fff;
+        transform: translateX(1rem);
+    }
+</style>
+
 @endpush
 
 {{-- Push extra scripts --}}
@@ -155,4 +219,17 @@
         }
     });
 </script>
+
+<script>
+    $(document).ready(function() {
+        $('#confidentialSwitch').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#switch-text').text('Yes (Confidential)');
+            } else {
+                $('#switch-text').text('No (Public)');
+            }
+        });
+    });
+</script>
+
 @endpush

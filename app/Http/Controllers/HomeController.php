@@ -28,8 +28,6 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $search = trim($request->get('search'));
-
         $forms = Edoc::where('type_id', 1)->count();
         $contract = Edoc::where('type_id', 2)->count();
         $sop = Edoc::where('type_id', 3)->count();
@@ -37,23 +35,40 @@ class HomeController extends Controller
         $work_instructions = Edoc::where('type_id', 5)->count();
         $others = Edoc::where('type_id', 6)->count();
 
-        $active_edocs = Edoc::orderBy('created_at', 'DESC')
-            ->when(!empty($search), function($query) use($search) {
-                $query->where('control_number', 'like', '%'.$search.'%')
-                    ->orWhere('remarks', 'like', '%'.$search.'%')
-                    ->orWhere('title', 'like', '%'.$search.'%');
-            })
-            ->paginate($this->getDataPerPage())
-            ->appends(request()->query());
+        $search = $request->input('search');
 
-        return view('home')->with([
+        $active_edocs = Edoc::orderBy('created_at', 'DESC')
+            ->where('status', 'active')
+            ->where(function ($query) {
+                $query->where('confidential', 0);
+            })
+            
+            ->when(!empty($search), function($query) use($search) {
+                $query->where(function($q) use($search) {
+                    $q->where('control_number', 'like', "%$search%")
+                    ->orWhere('remarks', 'like', "%$search%")
+                    ->orWhere('title', 'like', "%$search%")
+                    ->orWhereHas('department', function($d) use($search) {
+                            $d->where('name', 'like', "%$search%");
+                        })
+                    ->orWhereHas('user', function($u) use($search) {
+                            $u->where('name', 'like', "%$search%");
+                        });
+                });
+            })
+            ->paginate(10);
+
+        if ($request->ajax()) {
+            return view('pages.bigi.partials', compact('active_edocs'))->render();
+        }
+
+        return view('home', compact('active_edocs'))->with([
             'forms' => $forms,
             'contract' => $contract,
             'sop' => $sop,
             'policy' => $policy,
             'work_instructions' => $work_instructions,
             'others' => $others,
-            'active_edocs' => $active_edocs,
             'search' => $search,
             
         ]);
